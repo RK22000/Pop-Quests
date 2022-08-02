@@ -17,12 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.rk22000.data.Quest
 import io.github.rk22000.data.QuestDeck
 import io.github.rk22000.data.SampleData
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BasicCardDeck(questDeck: QuestDeck, modifier: Modifier = Modifier, confirmDeckChanged: (QuestDeck) -> Boolean = { true }) {
+fun BasicCardDeck(
+    questDeck: QuestDeck,
+    modifier: Modifier = Modifier,
+    confirmQuestDeleted:  (Quest) -> Boolean = { true },
+    // Don't create a confirmed Deck changed
+    // Instead create confirm <some action>
+    // Prevent this composable from taking unnecessary/unexpected actions
+) {
     var quests by remember(key1 = questDeck){
         mutableStateOf(questDeck.quests)
     }
@@ -37,8 +45,9 @@ fun BasicCardDeck(questDeck: QuestDeck, modifier: Modifier = Modifier, confirmDe
     Log.v("BasicCardDeck", "Recomposing with QuestDeck with ${questDeck.quests.size} quests on ${Thread.currentThread().name} " +
         "confirm key = $confirmKey, animating = ${dismissState.isAnimationRunning}, dismissState.currentValue = ${dismissState.currentValue}")
     if (!dismissState.isAnimationRunning && dismissState.currentValue != DismissValue.Default) {
+        val deletedQuest = quests[0]
         val alteredQuests = quests.subList(1, quests.size)
-        if (confirmDeckChanged(QuestDeck(alteredQuests)))
+        if (confirmQuestDeleted(deletedQuest))
             quests = alteredQuests
         else
             confirmKey = !confirmKey

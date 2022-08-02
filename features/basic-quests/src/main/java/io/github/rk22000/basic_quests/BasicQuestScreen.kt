@@ -63,19 +63,21 @@ fun BasicQuestScreen(
             creatingNewQuest = true
             allQuestVisible = false
         }
+
         fun showAllQuests() {
             allQuestVisible = true
             creatingNewQuest = false
         }
+
         val questDeck by viewModel.questFlow.collectAsState(initial = QuestDeck(emptyList()))
         // The Quest Deck in the scaffold
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                     MoodBar(
-                         currentMood = currentMood,
-                         onMoodChanged = {currentMood = it}
-                     )
+                MoodBar(
+                    currentMood = currentMood,
+                    onMoodChanged = { currentMood = it }
+                )
             },
             floatingActionButton = {
                 FloatingActionButton(
@@ -95,17 +97,17 @@ fun BasicQuestScreen(
                         Text(text = "Show all Quests")
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    SettingsButton { navController.navigate(SettingsScreenDestination)}
+                    SettingsButton { navController.navigate(SettingsScreenDestination) }
                 }
             }
         ) {
-            BasicCardDeck(questDeck = questDeck,
+            BasicCardDeck(questDeck = questDeck.copy(questDeck.quests.filter(currentMood.check)),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
                     .padding(horizontal = Paddings.default, vertical = Paddings.loose),
-                confirmDeckChanged = {
-                    viewModel.saveQuests(it)
+                confirmQuestDeleted = {
+                    viewModel.saveQuests(questDeck.copy(questDeck.quests - it))
                     true
                 }
             )
@@ -138,11 +140,14 @@ fun BasicQuestScreen(
         if (allQuestVisible) {
             Dialog(onDismissRequest = { allQuestVisible = false }) {
                 LazyColumn {
-                    itemsIndexed(questDeck.quests.filter(currentMood.check), key = {_, item -> item.toString() } ) {
-                        index, item ->
-                        BasicQuestCard(quest = item, modifier = Modifier
-                            .height(IntrinsicSize.Min)
-                            .padding(vertical = Paddings.tight))
+                    itemsIndexed(
+                        questDeck.quests.filter(currentMood.check),
+                        key = { _, item -> item.toString() }) { index, item ->
+                        BasicQuestCard(
+                            quest = item, modifier = Modifier
+                                .height(IntrinsicSize.Min)
+                                .padding(vertical = Paddings.tight)
+                        )
                     }
                 }
             }
