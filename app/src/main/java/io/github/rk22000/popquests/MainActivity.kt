@@ -6,9 +6,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
-import io.github.rk22000.basic_quests.BasicQuestScreen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import io.github.rk22000.basic_quests.basicQuestGraph
 import io.github.rk22000.data.QuestViewModel
 import io.github.rk22000.design_systems.theme.PopQuestsTheme
+import io.github.rk22000.navigation.BASIC_QUEST_SCREEN_DESTINATION
+import io.github.rk22000.settings.settingsGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,11 +25,11 @@ class MainActivity : ComponentActivity() {
 
                 // A surface container using the 'background' color from the theme
 //                WindowCompat.setDecorFitsSystemWindows(window, true)
-                BasicQuestScreen(
-                    viewModel = viewModel,
-                )
-
-
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = BASIC_QUEST_SCREEN_DESTINATION) {
+                    basicQuestGraph(navController, viewModel)
+                    settingsGraph(navController, viewModel)
+                }
             }
         }
     }

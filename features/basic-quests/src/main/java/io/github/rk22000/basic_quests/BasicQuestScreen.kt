@@ -22,6 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import io.github.rk22000.data.QuestDeck
 import io.github.rk22000.data.QuestViewModel
 import io.github.rk22000.data.SampleData
@@ -30,9 +34,23 @@ import io.github.rk22000.design_systems.theme.fabShape
 import io.github.rk22000.design_systems.ui.BasicCardDeck
 import io.github.rk22000.design_systems.ui.BasicQuestCard
 import io.github.rk22000.design_systems.ui.NewQuestCard
+import io.github.rk22000.design_systems.ui.SettingsButton
+import io.github.rk22000.navigation.BASIC_QUEST_SCREEN_DESTINATION
+import io.github.rk22000.navigation.SettingsScreenDestination
+
+
+fun NavGraphBuilder.basicQuestGraph(
+    navController: NavController,
+    viewModel: QuestViewModel
+) {
+    composable(BASIC_QUEST_SCREEN_DESTINATION) {
+        BasicQuestScreen(navController = navController, viewModel = viewModel)
+    }
+}
 
 @Composable
 fun BasicQuestScreen(
+    navController: NavController,
     viewModel: QuestViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -72,6 +90,8 @@ fun BasicQuestScreen(
                     Button(onClick = { showAllQuests() }) {
                         Text(text = "Show all Quests")
                     }
+                    Spacer(modifier = Modifier.weight(1f))
+                    SettingsButton { navController.navigate(SettingsScreenDestination)}
                 }
             }
         ) {
