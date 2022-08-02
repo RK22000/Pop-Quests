@@ -48,16 +48,16 @@ android {
 }
 
 dependencies {
-    AppDependencies.implementations.forEach {
+    Dependencies.implementations.forEach {
         implementation(it)
     }
-    AppDependencies.testImplementations.forEach {
-        testImplementation(it)
-    }
-    AppDependencies.androidTestImplementations.forEach {
+    Dependencies.androidTestImplementations.forEach {
         androidTestImplementation(it)
     }
-    AppDependencies.debugImplementations.forEach {
+    Dependencies.testImplementations.forEach {
+        testImplementation(it)
+    }
+    Dependencies.debugImplementations.forEach {
         debugImplementation(it)
     }
 

@@ -22,6 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import io.github.rk22000.data.QuestDeck
 import io.github.rk22000.data.QuestViewModel
 import io.github.rk22000.data.SampleData
@@ -31,8 +35,20 @@ import io.github.rk22000.design_systems.ui.BasicCardDeck
 import io.github.rk22000.design_systems.ui.BasicQuestCard
 import io.github.rk22000.design_systems.ui.NewQuestCard
 
+const val BASIC_QUEST_SCREEN_DESTINATION = "basic-quest-screen"
+
+fun NavGraphBuilder.basicQuestGraph(
+    navController: NavController,
+    viewModel: QuestViewModel
+) {
+    composable(BASIC_QUEST_SCREEN_DESTINATION) {
+        BasicQuestScreen(navController = navController, viewModel = viewModel)
+    }
+}
+
 @Composable
 fun BasicQuestScreen(
+    navController: NavController,
     viewModel: QuestViewModel,
     modifier: Modifier = Modifier
 ) {

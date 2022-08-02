@@ -1,5 +1,6 @@
 object Compose{
-    val version = "1.1.1"
+    const val version = "1.1.1"
+    const val nav_version = "2.5.1"
 }
 
 object Dependencies {
@@ -10,6 +11,7 @@ object Dependencies {
         "androidx.compose.ui:ui-tooling-preview:${Compose.version}",
         "androidx.lifecycle:lifecycle-runtime-ktx:2.5.0",
         "androidx.activity:activity-compose:1.5.0",
+        "androidx.navigation:navigation-compose:${Compose.nav_version}",
     )
     val testImplementations = listOf(
         "junit:junit:4.13.2",
