@@ -35,6 +35,25 @@ enum class Complexity(
     // 1, 2, 3, 5, 7, 13
 }
 
+
+enum class Mood(
+    val label: String,
+    val check: (Quest)->Boolean,
+) {
+    LAZY(
+        "Lazy",
+        { it.complexity <= Complexity.SIMPLE }
+    ),
+    NORMAL(
+        "Normal",
+        { true }
+    ),
+    ENERGETIC(
+        "Energetic",
+        { it.complexity >= Complexity.HARD }
+    ),
+}
+
 data class QuestDeck(
     val quests: List<Quest>
 ) {

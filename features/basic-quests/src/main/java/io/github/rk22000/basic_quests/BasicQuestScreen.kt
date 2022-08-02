@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
+import io.github.rk22000.data.Mood
 import io.github.rk22000.data.QuestDeck
 import io.github.rk22000.data.QuestViewModel
 import io.github.rk22000.data.SampleData
@@ -57,18 +58,27 @@ fun BasicQuestScreen(
     Box(modifier = modifier) {
         var creatingNewQuest by remember { mutableStateOf(false) }
         var allQuestVisible by remember { mutableStateOf(false) }
+        var currentMood by remember { mutableStateOf(Mood.NORMAL) }
         fun newQuestDialog() {
             creatingNewQuest = true
             allQuestVisible = false
         }
+
         fun showAllQuests() {
             allQuestVisible = true
             creatingNewQuest = false
         }
+
         val questDeck by viewModel.questFlow.collectAsState(initial = QuestDeck(emptyList()))
         // The Quest Deck in the scaffold
         Scaffold(
             modifier = Modifier.fillMaxSize(),
+            topBar = {
+                MoodBar(
+                    currentMood = currentMood,
+                    onMoodChanged = { currentMood = it }
+                )
+            },
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = { newQuestDialog() },
@@ -87,17 +97,17 @@ fun BasicQuestScreen(
                         Text(text = "Show all Quests")
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    SettingsButton { navController.navigate(SettingsScreenDestination)}
+                    SettingsButton { navController.navigate(SettingsScreenDestination) }
                 }
             }
         ) {
-            BasicCardDeck(questDeck = questDeck,
+            BasicCardDeck(questDeck = questDeck.copy(questDeck.quests.filter(currentMood.check)),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
                     .padding(horizontal = Paddings.default, vertical = Paddings.loose),
-                confirmDeckChanged = {
-                    viewModel.saveQuests(it)
+                confirmQuestDeleted = {
+                    viewModel.saveQuests(questDeck.copy(questDeck.quests - it))
                     true
                 }
             )
@@ -130,11 +140,14 @@ fun BasicQuestScreen(
         if (allQuestVisible) {
             Dialog(onDismissRequest = { allQuestVisible = false }) {
                 LazyColumn {
-                    itemsIndexed(questDeck.quests, key = {_, item -> item.toString() } ) {
-                        index, item ->
-                        BasicQuestCard(quest = item, modifier = Modifier
-                            .height(IntrinsicSize.Min)
-                            .padding(vertical = Paddings.tight))
+                    itemsIndexed(
+                        questDeck.quests.filter(currentMood.check),
+                        key = { _, item -> item.toString() }) { index, item ->
+                        BasicQuestCard(
+                            quest = item, modifier = Modifier
+                                .height(IntrinsicSize.Min)
+                                .padding(vertical = Paddings.tight)
+                        )
                     }
                 }
             }
