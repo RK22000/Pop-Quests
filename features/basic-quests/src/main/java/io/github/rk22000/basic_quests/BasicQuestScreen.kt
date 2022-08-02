@@ -138,7 +138,7 @@ fun BasicQuestScreen(
         if (allQuestVisible) {
             Dialog(onDismissRequest = { allQuestVisible = false }) {
                 LazyColumn {
-                    itemsIndexed(questDeck.quests, key = {_, item -> item.toString() } ) {
+                    itemsIndexed(questDeck.quests.filter(currentMood.check), key = {_, item -> item.toString() } ) {
                         index, item ->
                         BasicQuestCard(quest = item, modifier = Modifier
                             .height(IntrinsicSize.Min)

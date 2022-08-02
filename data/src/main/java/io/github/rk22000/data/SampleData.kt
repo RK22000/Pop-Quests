@@ -6,13 +6,13 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 
 object SampleData {
     fun getSampleQuests(): QuestDeck {
-        val words = listOf(50, 80, 30, 120, 65)
+        val words = listOf(50, 80, 30, 120, 65, 263, 14)
         return QuestDeck(
             words.mapIndexed { index, len ->
                 Quest(
                     description = "Quest $index \n" + LoremIpsum(len).values.joinToString(" "),
                     importance = Importance.DESIRABLE,
-                    complexity = Complexity.DIFFICULT
+                    complexity = Complexity.values().getOrElse(index % Complexity.values().size) { Complexity.RPI }
                 )
             }
         )

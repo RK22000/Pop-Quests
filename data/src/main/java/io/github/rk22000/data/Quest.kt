@@ -38,19 +38,19 @@ enum class Complexity(
 
 enum class Mood(
     val label: String,
-    val complexities: List<Complexity>,
+    val check: (Quest)->Boolean,
 ) {
     LAZY(
         "Lazy",
-        Complexity.values().filter { it.value <= Complexity.SIMPLE.value }
+        { it.complexity <= Complexity.SIMPLE }
     ),
     NORMAL(
         "Normal",
-        Complexity.values().toList()
+        { true }
     ),
     ENERGETIC(
         "Energetic",
-        Complexity.values().filter { it.value >= Complexity.HARD.value }
+        { it.complexity >= Complexity.HARD }
     ),
 }
 
