@@ -14,4 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Pop Quests"
 include (":app", ":data", ":design-systems")
-include("features:basic-quests")
+include(":features:basic-quests")

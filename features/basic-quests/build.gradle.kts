@@ -45,4 +45,5 @@ dependencies {
         debugImplementation(it)
     }
     implementation(project(Modules.data))
+    implementation(project(Modules.designSystems))
 }

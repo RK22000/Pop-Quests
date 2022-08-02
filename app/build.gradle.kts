@@ -63,6 +63,7 @@ dependencies {
 
     implementation(project(Modules.designSystems))
     implementation(project(Modules.data))
+    implementation(project(Modules.basicQuests))
 
     Moshi.implementations.forEach {
         implementation(it)
