@@ -29,6 +29,7 @@ object Modules {
     const val app = ":app"
     const val data = ":data"
     const val designSystems = ":design-systems"
+    const val basicQuests = ":features:basic-quests"
 }
 
 object Moshi {
