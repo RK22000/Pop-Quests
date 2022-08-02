@@ -35,6 +35,25 @@ enum class Complexity(
     // 1, 2, 3, 5, 7, 13
 }
 
+
+enum class Mood(
+    val label: String,
+    val complexities: List<Complexity>,
+) {
+    LAZY(
+        "Lazy",
+        Complexity.values().filter { it.value <= Complexity.SIMPLE.value }
+    ),
+    NORMAL(
+        "Normal",
+        Complexity.values().toList()
+    ),
+    ENERGETIC(
+        "Energetic",
+        Complexity.values().filter { it.value >= Complexity.HARD.value }
+    ),
+}
+
 data class QuestDeck(
     val quests: List<Quest>
 ) {

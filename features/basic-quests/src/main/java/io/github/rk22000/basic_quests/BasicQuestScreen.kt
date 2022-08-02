@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
+import io.github.rk22000.data.Mood
 import io.github.rk22000.data.QuestDeck
 import io.github.rk22000.data.QuestViewModel
 import io.github.rk22000.data.SampleData
@@ -57,6 +58,7 @@ fun BasicQuestScreen(
     Box(modifier = modifier) {
         var creatingNewQuest by remember { mutableStateOf(false) }
         var allQuestVisible by remember { mutableStateOf(false) }
+        var currentMood by remember { mutableStateOf(Mood.NORMAL) }
         fun newQuestDialog() {
             creatingNewQuest = true
             allQuestVisible = false
@@ -69,6 +71,12 @@ fun BasicQuestScreen(
         // The Quest Deck in the scaffold
         Scaffold(
             modifier = Modifier.fillMaxSize(),
+            topBar = {
+                     MoodBar(
+                         currentMood = currentMood,
+                         onMoodChanged = {currentMood = it}
+                     )
+            },
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = { newQuestDialog() },
