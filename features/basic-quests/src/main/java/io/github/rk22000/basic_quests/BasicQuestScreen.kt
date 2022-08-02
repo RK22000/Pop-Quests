@@ -83,10 +83,6 @@ fun BasicQuestScreen(
                 BottomAppBar(
                     cutoutShape = fabShape
                 ) {
-                    Button(onClick = { viewModel.saveQuests(SampleData.getSampleQuests()) }) {
-                        Text(text = "Refill DB")
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
                     Button(onClick = { showAllQuests() }) {
                         Text(text = "Show all Quests")
                     }
