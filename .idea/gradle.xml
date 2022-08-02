@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/design-systems" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/basic-quests" />
+            <option value="$PROJECT_DIR$/features/settings" />
           </set>
         </option>
       </GradleProjectSettings>
