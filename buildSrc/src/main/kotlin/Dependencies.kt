@@ -32,10 +32,12 @@ object Modules {
     const val data = ":data"
     const val designSystems = ":design-systems"
     const val basicQuests = ":features:basic-quests"
+    const val settings = ":features:settings"
+    const val navigation = ":navigation"
 }
 
 object Moshi {
-    val version = "1.13.0"
+    const val version = "1.13.0"
     val implementations = listOf(
         "com.squareup.moshi:moshi:$version",
         "com.squareup.moshi:moshi-kotlin:$version"

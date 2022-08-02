@@ -13,6 +13,7 @@ import io.github.rk22000.basic_quests.BasicQuestScreen
 import io.github.rk22000.basic_quests.basicQuestGraph
 import io.github.rk22000.data.QuestViewModel
 import io.github.rk22000.design_systems.theme.PopQuestsTheme
+import io.github.rk22000.settings.settingsGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = BASIC_QUEST_SCREEN_DESTINATION) {
                     basicQuestGraph(navController, viewModel)
+                    settingsGraph(navController, viewModel)
                 }
             }
         }

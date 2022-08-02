@@ -61,9 +61,11 @@ dependencies {
         debugImplementation(it)
     }
 
+    implementation(project(Modules.navigation))
     implementation(project(Modules.designSystems))
     implementation(project(Modules.data))
     implementation(project(Modules.basicQuests))
+    implementation(project(Modules.settings))
 
     Moshi.implementations.forEach {
         implementation(it)

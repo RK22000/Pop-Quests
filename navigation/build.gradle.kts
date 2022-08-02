@@ -11,7 +11,7 @@ android {
         targetSdk = 32
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+//      consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -22,12 +22,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = Compose.version
     }
 }
 
@@ -44,7 +38,9 @@ dependencies {
     Dependencies.debugImplementations.forEach {
         debugImplementation(it)
     }
-    implementation(project(Modules.data))
-    implementation(project(Modules.designSystems))
-    implementation(project(Modules.navigation))
+
+    Moshi.implementations.forEach {
+        implementation(it)
+    }
+
 }

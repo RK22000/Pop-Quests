@@ -34,6 +34,8 @@ import io.github.rk22000.design_systems.theme.fabShape
 import io.github.rk22000.design_systems.ui.BasicCardDeck
 import io.github.rk22000.design_systems.ui.BasicQuestCard
 import io.github.rk22000.design_systems.ui.NewQuestCard
+import io.github.rk22000.design_systems.ui.SettingsButton
+import io.github.rk22000.navigation.SettingsScreenDestination
 
 const val BASIC_QUEST_SCREEN_DESTINATION = "basic-quest-screen"
 
@@ -88,6 +90,8 @@ fun BasicQuestScreen(
                     Button(onClick = { showAllQuests() }) {
                         Text(text = "Show all Quests")
                     }
+                    Spacer(modifier = Modifier.weight(1f))
+                    SettingsButton { navController.navigate(SettingsScreenDestination)}
                 }
             }
         ) {
