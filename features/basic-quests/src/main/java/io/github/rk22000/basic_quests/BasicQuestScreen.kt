@@ -35,9 +35,9 @@ import io.github.rk22000.design_systems.ui.BasicCardDeck
 import io.github.rk22000.design_systems.ui.BasicQuestCard
 import io.github.rk22000.design_systems.ui.NewQuestCard
 import io.github.rk22000.design_systems.ui.SettingsButton
+import io.github.rk22000.navigation.BASIC_QUEST_SCREEN_DESTINATION
 import io.github.rk22000.navigation.SettingsScreenDestination
 
-const val BASIC_QUEST_SCREEN_DESTINATION = "basic-quest-screen"
 
 fun NavGraphBuilder.basicQuestGraph(
     navController: NavController,

@@ -6,8 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import io.github.rk22000.data.QuestViewModel
 import io.github.rk22000.design_systems.ui.UnderConstructionScreen
+import io.github.rk22000.navigation.SettingsScreenDestination
 
-const val SettingsScreenDestination = "settings-screen"
 
 fun NavGraphBuilder.settingsGraph(
     navController: NavController,
