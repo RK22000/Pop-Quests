@@ -20,10 +20,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import io.github.rk22000.data.Mood
-import io.github.rk22000.data.QuestDeck
-import io.github.rk22000.data.QuestViewModel
-import io.github.rk22000.data.SampleTags
+import io.github.rk22000.data.*
 import io.github.rk22000.design_systems.theme.Paddings
 import io.github.rk22000.design_systems.theme.fabShape
 import io.github.rk22000.design_systems.ui.BasicCardDeck
@@ -63,6 +60,15 @@ fun BasicQuestScreen(
         fun showAllQuests() {
             allQuestVisible = true
             creatingNewQuest = false
+        }
+
+        val currentTime = System.currentTimeMillis()
+        val currentQuestFilter: (Quest) -> Boolean = {
+            with(it){
+                startLine < currentTime &&
+                currentMood.check(this) &&
+                        filterTag?.let { it in tags }?:true
+            }
         }
 
         val questDeck by viewModel.questFlow.collectAsState(initial = QuestDeck(emptyList()))
@@ -125,12 +131,7 @@ fun BasicQuestScreen(
                 questDeck = questDeck
                     .copy(
                         questDeck.quests
-                            .filter(currentMood.check)
-                            .filter { quest ->
-                                filterTag
-                                    ?.let { it in quest.tags }
-                                    ?: true
-                            }
+                            .filter(currentQuestFilter)
                     ),
                 modifier = Modifier
                     .fillMaxSize()
@@ -173,12 +174,7 @@ fun BasicQuestScreen(
                     itemsIndexed(
                         questDeck
                             .quests
-                            .filter(currentMood.check)
-                            .filter { quest ->
-                                filterTag
-                                    ?.let { it in quest.tags }
-                                    ?: true
-                            }
+                            .filter(currentQuestFilter)
                         ,
                         key = { _, item -> item.toString() }) { index, item ->
                         BasicQuestCard(
