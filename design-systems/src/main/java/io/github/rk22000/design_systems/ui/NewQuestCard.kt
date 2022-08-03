@@ -1,8 +1,8 @@
 package io.github.rk22000.design_systems.ui
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,10 +42,7 @@ import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
-import io.github.rk22000.data.Complexity
-import io.github.rk22000.data.Importance
-import io.github.rk22000.data.Quest
-import io.github.rk22000.data.QuestViewModel
+import io.github.rk22000.data.*
 import io.github.rk22000.design_systems.theme.Paddings
 import io.github.rk22000.design_systems.theme.Shapes
 import io.github.rk22000.design_systems.theme.cardShape
@@ -96,6 +93,40 @@ fun NewQuestCard(
                 label = { Text("New Quest") },
                 placeholder = { Text(text = "Enter the new Quest") }
             )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = Paddings.tight)
+                    .horizontalScroll(
+                        rememberScrollState(),
+                        reverseScrolling = true
+                    ),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                SampleTags.values().forEachIndexed { index, tag ->
+                    TagButton(
+                        tagLabel = tag.name,
+                        modifier = with(Modifier) {
+                            if (index != 0)
+                                padding(start = Paddings.tight)
+                            else
+                                this
+                        },
+                        selected = { tag.name in draft.tags },
+                        clickable = { true },
+                        onClick = {
+                            with(draft) {
+                                if (tag.name in tags)
+                                    copy(tags = tags - tag.name)
+                                else
+                                    copy(tags = tags + tag.name)
+                            }
+                                .takeIf(confirmDraftChanged)
+                                ?.let { confirmedDraft -> draft = confirmedDraft }
+                        }
+                    )
+                }
+            }
             Row {
                 Box(Modifier.weight(1f)) {
                     var impExpanded by remember {
@@ -111,7 +142,8 @@ fun NewQuestCard(
                             DropdownMenuItem(onClick = {
                                 draft.copy(importance = it)
                                     .takeIf(confirmDraftChanged)
-                                    ?.let { confirmedDraft -> draft = confirmedDraft
+                                    ?.let { confirmedDraft ->
+                                        draft = confirmedDraft
                                         impExpanded = false
                                     }
 
@@ -136,7 +168,8 @@ fun NewQuestCard(
                             DropdownMenuItem(onClick = {
                                 draft.copy(complexity = it)
                                     .takeIf(confirmDraftChanged)
-                                    ?.let { confirmedDraft -> draft = confirmedDraft
+                                    ?.let { confirmedDraft ->
+                                        draft = confirmedDraft
                                         impExpanded = false
                                     }
                             }) {
@@ -150,15 +183,25 @@ fun NewQuestCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Button(onClick = { if (confirmNewQuestCreated(draft)) { confirmDraftChanged(Quest("", Importance.DESIRABLE, Complexity.SIMPLE))} }) {
-                    Text(text = "Create Quest",
+                Button(onClick = {
+                    if (confirmNewQuestCreated(draft)) {
+                        confirmDraftChanged(Quest("", Importance.DESIRABLE, Complexity.SIMPLE))
+                    }
+                }) {
+                    Text(
+                        text = "Create Quest",
                         maxLines = 1
                     )
                 }
-                TextButton(onClick = { if (confirmDraftCreated(draft)) { /* TODO exit card */ } }) {
-                    Text(text = "Draft Quest",
-                    maxLines = 1)
-                    
+                TextButton(onClick = {
+                    if (confirmDraftCreated(draft)) { /* TODO exit card */
+                    }
+                }) {
+                    Text(
+                        text = "Draft Quest",
+                        maxLines = 1
+                    )
+
                 }
             }
 

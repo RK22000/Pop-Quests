@@ -1,16 +1,7 @@
 package io.github.rk22000.design_systems.ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
@@ -32,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import io.github.rk22000.data.Complexity
 import io.github.rk22000.data.Importance
 import io.github.rk22000.data.Quest
+import io.github.rk22000.data.SampleTags
 import io.github.rk22000.design_systems.theme.Paddings
 import io.github.rk22000.design_systems.theme.cardShape
 
@@ -66,6 +58,21 @@ fun BasicQuestCard(
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             )
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                quest.tags.forEachIndexed { index, tag ->
+                    TagButton(
+                        tagLabel = tag,
+                        modifier = Modifier
+                            .let {
+                                if (index != 0)
+                                    it.padding(start = Paddings.tight)
+                                else
+                                    it
+                            },
+                        selected = { true },
+                    )
+                }
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -93,7 +100,8 @@ fun BasicCardPreview() {
         quest = Quest(
             description = LoremIpsum(50).values.joinToString(" "),
             importance = Importance.DESIRABLE,
-            complexity = Complexity.SIMPLE
+            complexity = Complexity.SIMPLE,
+            tags = listOf(SampleTags.FUN.name)
         ),
         modifier = Modifier.size(width = 300.dp, height = 500.dp)
     )
@@ -101,7 +109,7 @@ fun BasicCardPreview() {
 
 @Preview
 @Composable
-fun hello(){
+fun hello() {
     Surface {
         Text(text = "Helo World")
     }

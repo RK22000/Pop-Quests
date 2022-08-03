@@ -1,6 +1,11 @@
 package io.github.rk22000.data
 
-data class Quest(val description: String, val importance: Importance, val complexity: Complexity) {
+data class Quest(
+    val description: String,
+    val importance: Importance,
+    val complexity: Complexity,
+    val tags: List<String> = emptyList()
+) {
     val priority: Int
         get() = importance.value / complexity.value
 }
@@ -38,7 +43,7 @@ enum class Complexity(
 
 enum class Mood(
     val label: String,
-    val check: (Quest)->Boolean,
+    val check: (Quest) -> Boolean,
 ) {
     LAZY(
         "Lazy",
@@ -57,7 +62,7 @@ enum class Mood(
 data class QuestDeck(
     val quests: List<Quest>
 ) {
-    fun add(quest: Quest): QuestDeck{
+    fun add(quest: Quest): QuestDeck {
         return QuestDeck((quests + quest).sortedByDescending { it.priority })
     }
 }
