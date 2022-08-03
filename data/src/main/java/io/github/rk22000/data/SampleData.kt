@@ -12,11 +12,20 @@ object SampleData {
                 Quest(
                     description = "Quest $index \n" + LoremIpsum(len).values.joinToString(" "),
                     importance = Importance.DESIRABLE,
-                    complexity = Complexity.values().getOrElse(index % Complexity.values().size) { Complexity.RPI }
+                    complexity = Complexity.values().getOrElse(index % Complexity.values().size) { Complexity.RPI },
+                    tags = listOf(SampleTags.values()[index % SampleTags.values().size].name)
                 )
             }
         )
     }
+}
+
+enum class SampleTags {
+    WORK,
+    CHORE,
+    FAMILY,
+    STUDY,
+    FUN,
 }
 
 class DeckPreviewProvider : PreviewParameterProvider<QuestDeck> {
