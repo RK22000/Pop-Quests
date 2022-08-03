@@ -4,7 +4,9 @@ data class Quest(
     val description: String,
     val importance: Importance,
     val complexity: Complexity,
-    val tags: List<String> = emptyList()
+    val tags: List<String> = emptyList(),
+    val startLine: Long = System.currentTimeMillis(),
+    val deadLind: Long = Long.MAX_VALUE
 ) {
     val priority: Int
         get() = importance.value / complexity.value
@@ -33,10 +35,11 @@ enum class Complexity(
     VERY_EASY(1, "Very Easy"),
     EASY(2, "Easy"),
     SIMPLE(3, "Simple"),
-    HARD(5, "Hard"),
-    DIFFICULT(7, "Difficult"),
-    MISSION_IMPOSSIBLE(8, "Mission impossible"),
-    RPI(13, "RIP"),
+    MEDIOCRE(5, "Mediocre"),
+    HARD(7, "Hard"),
+    DIFFICULT(13, "Difficult"),
+    MISSION_IMPOSSIBLE(17, "Mission impossible"),
+    RPI(23, "RIP"),
     // 1, 2, 3, 5, 7, 13
 }
 
