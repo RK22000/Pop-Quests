@@ -8,12 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.BottomAppBar
-import androidx.compose.material.Button
-import androidx.compose.material.FabPosition
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,11 +20,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.dialog
 import io.github.rk22000.data.Mood
 import io.github.rk22000.data.QuestDeck
 import io.github.rk22000.data.QuestViewModel
-import io.github.rk22000.data.SampleData
+import io.github.rk22000.data.SampleTags
 import io.github.rk22000.design_systems.theme.Paddings
 import io.github.rk22000.design_systems.theme.fabShape
 import io.github.rk22000.design_systems.ui.BasicCardDeck
@@ -59,6 +53,8 @@ fun BasicQuestScreen(
         var creatingNewQuest by remember { mutableStateOf(false) }
         var allQuestVisible by remember { mutableStateOf(false) }
         var currentMood by remember { mutableStateOf(Mood.NORMAL) }
+        var filterTag: String? by remember { mutableStateOf(null) }
+        var filterMenuExpanded by remember { mutableStateOf(false) }
         fun newQuestDialog() {
             creatingNewQuest = true
             allQuestVisible = false
@@ -97,11 +93,45 @@ fun BasicQuestScreen(
                         Text(text = "Show all Quests")
                     }
                     Spacer(modifier = Modifier.weight(1f))
+                    Box {
+                        TextButton(onClick = { filterMenuExpanded = true }) {
+                            Text(text = "Filter:<${filterTag ?: ""}>")
+                        }
+                        DropdownMenu(
+                            expanded = filterMenuExpanded,
+                            onDismissRequest = { filterMenuExpanded = false }) {
+                            SampleTags.values().forEach {
+                                DropdownMenuItem(onClick = {
+                                    filterTag = it.name
+                                    filterMenuExpanded = false
+                                }) {
+                                    Text(text = it.name)
+                                }
+                            }
+                            DropdownMenuItem(onClick = {
+                                filterTag = null; filterMenuExpanded = false
+                            }) {
+                                Text(text = "None")
+                            }
+
+                        }
+                    }
+
                     SettingsButton { navController.navigate(SettingsScreenDestination) }
                 }
             }
         ) {
-            BasicCardDeck(questDeck = questDeck.copy(questDeck.quests.filter(currentMood.check)),
+            BasicCardDeck(
+                questDeck = questDeck
+                    .copy(
+                        questDeck.quests
+                            .filter(currentMood.check)
+                            .filter { quest ->
+                                filterTag
+                                    ?.let { it in quest.tags }
+                                    ?: true
+                            }
+                    ),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
@@ -141,7 +171,15 @@ fun BasicQuestScreen(
             Dialog(onDismissRequest = { allQuestVisible = false }) {
                 LazyColumn {
                     itemsIndexed(
-                        questDeck.quests.filter(currentMood.check),
+                        questDeck
+                            .quests
+                            .filter(currentMood.check)
+                            .filter { quest ->
+                                filterTag
+                                    ?.let { it in quest.tags }
+                                    ?: true
+                            }
+                        ,
                         key = { _, item -> item.toString() }) { index, item ->
                         BasicQuestCard(
                             quest = item, modifier = Modifier
