@@ -46,6 +46,7 @@ fun TagButton(
     Text(
         text = tagLabel,
         modifier = modifier
+            .clickable(enabled = clickable(), onClick = onClick)
             .let {
                 if (selected())
                     it.background(color = MaterialTheme.colors.primary, shape = fabShape)
@@ -53,7 +54,6 @@ fun TagButton(
                     it.border(width = 1.dp, color = MaterialTheme.colors.primary, shape = fabShape)
             }
             .padding(horizontal = Paddings.tight),
-        color = MaterialTheme.colors.onPrimary
     )
 }
 
