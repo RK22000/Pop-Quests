@@ -1,8 +1,6 @@
 package io.github.rk22000.design_systems.ui
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,34 +17,30 @@ import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.Insets
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import io.github.rk22000.data.*
 import io.github.rk22000.design_systems.theme.Paddings
-import io.github.rk22000.design_systems.theme.Shapes
 import io.github.rk22000.design_systems.theme.cardShape
-import io.github.rk22000.design_systems.theme.stroke
+import java.time.LocalDate
+import java.util.*
 
 @Composable
 fun NewQuestCard(
@@ -93,6 +87,69 @@ fun NewQuestCard(
                 label = { Text("New Quest") },
                 placeholder = { Text(text = "Enter the new Quest") }
             )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val context = LocalContext.current
+                TextButton(onClick = {
+                    DatePicker(
+                        context = context,
+                        date = draft.startLine,
+                        onDateChange = {
+                            draft.copy(startLine = it)
+                                .takeIf(confirmDraftChanged)
+                                ?.let { confirmedDraft -> draft = confirmedDraft }
+                        }
+                    )
+                }) {
+                    Text(text = "Start Day\n${LocalDate.ofEpochDay(draft.startLine)}")
+                }
+                Box {
+                    var deadlineMenu by remember {
+                        mutableStateOf(false)
+                    }
+                    DropdownMenu(
+                        expanded = deadlineMenu,
+                        onDismissRequest = { deadlineMenu = false }) {
+                        DropdownMenuItem(onClick = {
+                            draft.copy(deadLind = LocalDate.MAX.toEpochDay())
+                                .takeIf(confirmDraftChanged)
+                                ?.let { confirmedDraft -> draft = confirmedDraft }
+                            deadlineMenu = false
+                        }) {
+                            Text(text = "None")
+                        }
+                        DropdownMenuItem(onClick = {
+                            DatePicker(
+                                context = context,
+                                date = with(draft) { if (deadLind != LocalDate.MAX.toEpochDay()) deadLind else draft.startLine },
+                                onDateChange = {
+                                    draft.copy(deadLind = it)
+                                        .takeIf(confirmDraftChanged)
+                                        ?.let { confirmedDraft -> draft = confirmedDraft }
+                                }
+                            )
+                            deadlineMenu = false
+                        }) {
+                            Text(text = "Pick Date")
+                        }
+                    }
+
+                    TextButton(onClick = {
+                        deadlineMenu = true
+                    }) {
+                        Text(
+                            text = "Deadline\n${
+                                draft.deadLind.takeUnless { it == LocalDate.MAX.toEpochDay() }
+                                    ?.let { LocalDate.ofEpochDay(it) } ?: ""
+                            }",
+                            textAlign = TextAlign.End
+                        )
+                    }
+                }
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -206,6 +263,19 @@ fun NewQuestCard(
             }
 
         }
+
+//        if (pickDate) {
+//            AndroidView(factory = {
+//                with(it){
+//                    MaterialDatePicker.Builder.datePicker().build().view!!
+//                }
+//
+//            })
+//            AndroidViewBinding(factory = {
+//                MaterialDatePicker.Builder.datePicker().build().view
+//            })
+//
+//        }
     }
 }
 

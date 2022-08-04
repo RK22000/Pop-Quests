@@ -29,6 +29,7 @@ import io.github.rk22000.design_systems.ui.NewQuestCard
 import io.github.rk22000.design_systems.ui.SettingsButton
 import io.github.rk22000.navigation.BASIC_QUEST_SCREEN_DESTINATION
 import io.github.rk22000.navigation.SettingsScreenDestination
+import java.time.LocalDate
 
 
 fun NavGraphBuilder.basicQuestGraph(
@@ -62,10 +63,10 @@ fun BasicQuestScreen(
             creatingNewQuest = false
         }
 
-        val currentTime = System.currentTimeMillis()
+        val currentDate = LocalDate.now().toEpochDay()
         val currentQuestFilter: (Quest) -> Boolean = {
             with(it){
-                startLine < currentTime &&
+                startLine <= currentDate &&
                 currentMood.check(this) &&
                         filterTag?.let { it in tags }?:true
             }

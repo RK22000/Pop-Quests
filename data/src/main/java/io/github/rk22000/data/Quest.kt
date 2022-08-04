@@ -1,12 +1,14 @@
 package io.github.rk22000.data
 
+import java.time.LocalDate
+
 data class Quest(
     val description: String,
     val importance: Importance,
     val complexity: Complexity,
     val tags: List<String> = emptyList(),
-    val startLine: Long = System.currentTimeMillis(),
-    val deadLind: Long = Long.MAX_VALUE
+    val startLine: Long = LocalDate.now().toEpochDay(),
+    val deadLind: Long = LocalDate.MAX.toEpochDay()
 ) {
     val priority: Int
         get() = importance.value / complexity.value
