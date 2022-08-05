@@ -1,6 +1,7 @@
 package io.github.rk22000.basic_quests
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
@@ -18,11 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import io.github.rk22000.data.*
+import io.github.rk22000.design_systems.R
 import io.github.rk22000.design_systems.theme.Paddings
 import io.github.rk22000.design_systems.theme.fabShape
 import io.github.rk22000.design_systems.ui.BasicCardDeck
@@ -98,7 +101,11 @@ fun BasicQuestScreen(
                     onClick = { newQuestDialog() },
                     shape = fabShape
                 ) {
-
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_baseline_add_24),
+                        contentDescription = "Create new quest",
+                        alpha = 0.8f
+                    )
                 }
             },
             floatingActionButtonPosition = FabPosition.Center,
