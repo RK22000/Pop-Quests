@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -40,7 +39,6 @@ import io.github.rk22000.data.*
 import io.github.rk22000.design_systems.theme.Paddings
 import io.github.rk22000.design_systems.theme.cardShape
 import java.time.LocalDate
-import java.util.*
 
 @Composable
 fun NewQuestCard(
@@ -114,7 +112,7 @@ fun NewQuestCard(
                         expanded = deadlineMenu,
                         onDismissRequest = { deadlineMenu = false }) {
                         DropdownMenuItem(onClick = {
-                            draft.copy(deadLind = LocalDate.MAX.toEpochDay())
+                            draft.copy(deadLine = LocalDate.MAX.toEpochDay())
                                 .takeIf(confirmDraftChanged)
                                 ?.let { confirmedDraft -> draft = confirmedDraft }
                             deadlineMenu = false
@@ -124,9 +122,9 @@ fun NewQuestCard(
                         DropdownMenuItem(onClick = {
                             DatePicker(
                                 context = context,
-                                date = with(draft) { if (deadLind != LocalDate.MAX.toEpochDay()) deadLind else draft.startLine },
+                                date = with(draft) { if (deadLine != LocalDate.MAX.toEpochDay()) deadLine else draft.startLine },
                                 onDateChange = {
-                                    draft.copy(deadLind = it)
+                                    draft.copy(deadLine = it)
                                         .takeIf(confirmDraftChanged)
                                         ?.let { confirmedDraft -> draft = confirmedDraft }
                                 }
@@ -142,7 +140,7 @@ fun NewQuestCard(
                     }) {
                         Text(
                             text = "Deadline\n${
-                                draft.deadLind.takeUnless { it == LocalDate.MAX.toEpochDay() }
+                                draft.deadLine.takeUnless { it == LocalDate.MAX.toEpochDay() }
                                     ?.let { LocalDate.ofEpochDay(it) } ?: ""
                             }",
                             textAlign = TextAlign.End

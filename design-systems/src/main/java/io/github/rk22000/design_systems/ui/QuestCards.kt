@@ -11,7 +11,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -68,10 +67,10 @@ fun BasicQuestCard(
                     color = MaterialTheme.colors.primary
                 )
                 quest
-                    .takeUnless { it.deadLind == LocalDate.MAX.toEpochDay() }
+                    .takeUnless { it.deadLine == LocalDate.MAX.toEpochDay() }
                     ?.let {
                         Text(
-                            text = "Deadline \n${LocalDate.ofEpochDay(it.deadLind)}",
+                            text = "Deadline \n${LocalDate.ofEpochDay(it.deadLine)}",
                             color = MaterialTheme.colors.primary,
                             textAlign = TextAlign.End
                         )

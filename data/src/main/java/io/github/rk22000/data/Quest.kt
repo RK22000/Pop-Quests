@@ -8,7 +8,7 @@ data class Quest(
     val complexity: Complexity,
     val tags: List<String> = emptyList(),
     val startLine: Long = LocalDate.now().toEpochDay(),
-    val deadLind: Long = LocalDate.MAX.toEpochDay()
+    val deadLine: Long = LocalDate.MAX.toEpochDay()
 ) {
     val priority: Int
         get() = importance.value / complexity.value
@@ -56,13 +56,15 @@ enum class Mood(
         { it.complexity <= Complexity.SIMPLE },
         { q1, q2 ->
             (q2.priority - q1.priority)
+                .takeUnless { it == 0 }
+                ?: (q1.deadLine - q2.deadLine).toInt()
         }
     ),
     NORMAL(
         "Normal",
         { true },
         { q1, q2 ->
-            (q1.deadLind - q2.deadLind)
+            (q1.deadLine - q2.deadLine)
                 .takeUnless { it == 0L }
                 ?.toInt()
                 ?: (q2.priority - q1.priority)
@@ -74,6 +76,6 @@ data class QuestDeck(
     val quests: List<Quest>
 ) {
     fun add(quest: Quest): QuestDeck {
-        return QuestDeck((quests + quest).sortedByDescending { it.priority })
+        return QuestDeck((quests + quest).sortedWith(Mood.NORMAL.comparator))
     }
 }
