@@ -72,7 +72,16 @@ fun BasicQuestScreen(
             }
         }
 
-        val questDeck by viewModel.questFlow.collectAsState(initial = QuestDeck(emptyList()))
+        val fullQuestDeck by viewModel.questFlow.collectAsState(initial = QuestDeck(emptyList()))
+        val filteredQuestDeck by remember(key1 = fullQuestDeck, key2 = currentMood, key3 = filterTag) {
+            mutableStateOf(
+                with(fullQuestDeck) {
+                    copy(
+                        quests = quests.filter(currentQuestFilter).sortedWith(currentMood.comparator)
+                    )
+                }
+            )
+        }
         // The Quest Deck in the scaffold
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -97,7 +106,7 @@ fun BasicQuestScreen(
                     cutoutShape = fabShape
                 ) {
                     Button(onClick = { showAllQuests() }) {
-                        Text(text = "Show all Quests")
+                        Text(text = "Show full deck")
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Box {
@@ -129,17 +138,15 @@ fun BasicQuestScreen(
             }
         ) {
             BasicCardDeck(
-                questDeck = questDeck
-                    .copy(
-                        questDeck.quests
-                            .filter(currentQuestFilter)
-                    ),
+                questDeck = filteredQuestDeck,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
                     .padding(horizontal = Paddings.default, vertical = Paddings.loose),
                 confirmQuestDeleted = {
-                    viewModel.saveQuests(questDeck.copy(questDeck.quests - it))
+                    with(fullQuestDeck) {
+                        viewModel.saveQuests(copy(quests-it))
+                    }
                     true
                 }
             )
@@ -173,11 +180,8 @@ fun BasicQuestScreen(
             Dialog(onDismissRequest = { allQuestVisible = false }) {
                 LazyColumn {
                     itemsIndexed(
-                        questDeck
-                            .quests
-                            .filter(currentQuestFilter)
-                        ,
-                        key = { _, item -> item.toString() }) { index, item ->
+                        filteredQuestDeck.quests,
+                        key = { _, item -> item.toString() }) { _, item ->
                         BasicQuestCard(
                             quest = item, modifier = Modifier
                                 .height(IntrinsicSize.Min)

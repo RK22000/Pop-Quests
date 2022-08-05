@@ -49,18 +49,24 @@ enum class Complexity(
 enum class Mood(
     val label: String,
     val check: (Quest) -> Boolean,
+    val comparator: Comparator<Quest>,
 ) {
     LAZY(
         "Lazy",
-        { it.complexity <= Complexity.SIMPLE }
+        { it.complexity <= Complexity.SIMPLE },
+        { q1, q2 ->
+            (q2.priority - q1.priority)
+        }
     ),
     NORMAL(
         "Normal",
-        { true }
-    ),
-    ENERGETIC(
-        "Energetic",
-        { it.complexity >= Complexity.HARD }
+        { true },
+        { q1, q2 ->
+            (q1.deadLind - q2.deadLind)
+                .takeUnless { it == 0L }
+                ?.toInt()
+                ?: (q2.priority - q1.priority)
+        }
     ),
 }
 
