@@ -258,24 +258,9 @@ fun NewQuestCard(
                         text = "Draft Quest",
                         maxLines = 1
                     )
-
                 }
             }
-
         }
-
-//        if (pickDate) {
-//            AndroidView(factory = {
-//                with(it){
-//                    MaterialDatePicker.Builder.datePicker().build().view!!
-//                }
-//
-//            })
-//            AndroidViewBinding(factory = {
-//                MaterialDatePicker.Builder.datePicker().build().view
-//            })
-//
-//        }
     }
 }
 
