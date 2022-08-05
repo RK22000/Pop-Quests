@@ -110,7 +110,8 @@ fun NewQuestCard(
                     }
                     DropdownMenu(
                         expanded = deadlineMenu,
-                        onDismissRequest = { deadlineMenu = false }) {
+                        onDismissRequest = { deadlineMenu = false },
+                    ) {
                         DropdownMenuItem(onClick = {
                             draft.copy(deadLine = LocalDate.MAX.toEpochDay())
                                 .takeIf(confirmDraftChanged)
