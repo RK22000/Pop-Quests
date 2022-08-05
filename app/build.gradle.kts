@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "io.github.rk22000.popquests"
-        minSdk = 21
+        minSdk = 26
         targetSdk = 32
         versionCode = 1
         versionName = "1.0"

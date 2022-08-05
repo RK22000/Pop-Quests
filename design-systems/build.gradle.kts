@@ -7,7 +7,7 @@ android {
     compileSdk = 32
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 26
         targetSdk = 32
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -44,5 +44,7 @@ dependencies {
     Dependencies.debugImplementations.forEach {
         debugImplementation(it)
     }
+    implementation(Dependencies.viewInterop)
+    implementation(Dependencies.materialViewComponenets)
     implementation(project(Modules.data))
 }

@@ -20,10 +20,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import io.github.rk22000.data.Mood
-import io.github.rk22000.data.QuestDeck
-import io.github.rk22000.data.QuestViewModel
-import io.github.rk22000.data.SampleTags
+import io.github.rk22000.data.*
 import io.github.rk22000.design_systems.theme.Paddings
 import io.github.rk22000.design_systems.theme.fabShape
 import io.github.rk22000.design_systems.ui.BasicCardDeck
@@ -32,6 +29,7 @@ import io.github.rk22000.design_systems.ui.NewQuestCard
 import io.github.rk22000.design_systems.ui.SettingsButton
 import io.github.rk22000.navigation.BASIC_QUEST_SCREEN_DESTINATION
 import io.github.rk22000.navigation.SettingsScreenDestination
+import java.time.LocalDate
 
 
 fun NavGraphBuilder.basicQuestGraph(
@@ -65,7 +63,25 @@ fun BasicQuestScreen(
             creatingNewQuest = false
         }
 
-        val questDeck by viewModel.questFlow.collectAsState(initial = QuestDeck(emptyList()))
+        val currentDate = LocalDate.now().toEpochDay()
+        val currentQuestFilter: (Quest) -> Boolean = {
+            with(it){
+                startLine <= currentDate &&
+                currentMood.check(this) &&
+                        filterTag?.let { it in tags }?:true
+            }
+        }
+
+        val fullQuestDeck by viewModel.questFlow.collectAsState(initial = QuestDeck(emptyList()))
+        val filteredQuestDeck by remember(key1 = fullQuestDeck, key2 = currentMood, key3 = filterTag) {
+            mutableStateOf(
+                with(fullQuestDeck) {
+                    copy(
+                        quests = quests.filter(currentQuestFilter).sortedWith(currentMood.comparator)
+                    )
+                }
+            )
+        }
         // The Quest Deck in the scaffold
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -90,7 +106,7 @@ fun BasicQuestScreen(
                     cutoutShape = fabShape
                 ) {
                     Button(onClick = { showAllQuests() }) {
-                        Text(text = "Show all Quests")
+                        Text(text = "Show full deck")
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Box {
@@ -122,22 +138,15 @@ fun BasicQuestScreen(
             }
         ) {
             BasicCardDeck(
-                questDeck = questDeck
-                    .copy(
-                        questDeck.quests
-                            .filter(currentMood.check)
-                            .filter { quest ->
-                                filterTag
-                                    ?.let { it in quest.tags }
-                                    ?: true
-                            }
-                    ),
+                questDeck = filteredQuestDeck,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
                     .padding(horizontal = Paddings.default, vertical = Paddings.loose),
                 confirmQuestDeleted = {
-                    viewModel.saveQuests(questDeck.copy(questDeck.quests - it))
+                    with(fullQuestDeck) {
+                        viewModel.saveQuests(copy(quests-it))
+                    }
                     true
                 }
             )
@@ -171,16 +180,8 @@ fun BasicQuestScreen(
             Dialog(onDismissRequest = { allQuestVisible = false }) {
                 LazyColumn {
                     itemsIndexed(
-                        questDeck
-                            .quests
-                            .filter(currentMood.check)
-                            .filter { quest ->
-                                filterTag
-                                    ?.let { it in quest.tags }
-                                    ?: true
-                            }
-                        ,
-                        key = { _, item -> item.toString() }) { index, item ->
+                        filteredQuestDeck.quests,
+                        key = { _, item -> item.toString() }) { _, item ->
                         BasicQuestCard(
                             quest = item, modifier = Modifier
                                 .height(IntrinsicSize.Min)

@@ -23,8 +23,12 @@ object Dependencies {
     )
     val debugImplementations = listOf(
         "androidx.compose.ui:ui-tooling:${Compose.version}",
-        "androidx.compose.ui:ui-test-manifest:${Compose.version}"
+        "androidx.compose.ui:ui-test-manifest:${Compose.version}",
+        "androidx.customview:customview-poolingcontainer:1.0.0"
     )
+
+    val viewInterop = "androidx.compose.ui:ui-viewbinding:1.2.0"
+    val materialViewComponenets = "com.google.android.material:material:1.6.1"
 }
 
 object Modules {

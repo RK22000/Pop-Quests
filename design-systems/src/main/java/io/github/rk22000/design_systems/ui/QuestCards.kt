@@ -11,7 +11,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -26,6 +25,7 @@ import io.github.rk22000.data.Quest
 import io.github.rk22000.data.SampleTags
 import io.github.rk22000.design_systems.theme.Paddings
 import io.github.rk22000.design_systems.theme.cardShape
+import java.time.LocalDate
 
 @Composable
 fun BasicQuestCard(
@@ -58,7 +58,28 @@ fun BasicQuestCard(
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             )
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Start Day\n${LocalDate.ofEpochDay(quest.startLine)}",
+                    color = MaterialTheme.colors.primary
+                )
+                quest
+                    .takeUnless { it.deadLine == LocalDate.MAX.toEpochDay() }
+                    ?.let {
+                        Text(
+                            text = "Deadline \n${LocalDate.ofEpochDay(it.deadLine)}",
+                            color = MaterialTheme.colors.primary,
+                            textAlign = TextAlign.End
+                        )
+                    }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
                 quest.tags.forEachIndexed { index, tag ->
                     TagButton(
                         tagLabel = tag,
