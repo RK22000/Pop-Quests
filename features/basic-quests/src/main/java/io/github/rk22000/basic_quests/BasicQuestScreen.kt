@@ -1,5 +1,6 @@
 package io.github.rk22000.basic_quests
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -154,6 +156,7 @@ fun BasicQuestScreen(
         // The new Quest Dialog
         if (creatingNewQuest) {
             Dialog(onDismissRequest = { creatingNewQuest = false }) {
+                val localContext = LocalContext.current
                 NewQuestCard(draftQuest = viewModel.draftQuest,
                     modifier = Modifier
                         .fillMaxSize()
@@ -163,10 +166,18 @@ fun BasicQuestScreen(
                         creatingNewQuest = false
                         true
                     },
-                    confirmNewQuestCreated = {
-                        viewModel.saveNewQuest(it)
-                        creatingNewQuest = false
-                        true
+                    confirmNewQuestCreated = { newQuest ->
+                        with(newQuest) {
+                            if (description !in fullQuestDeck.quests.map { it.description }) let {
+                                viewModel.saveNewQuest(it)
+                                creatingNewQuest = false
+                                Toast.makeText(localContext, "Quest created", Toast.LENGTH_SHORT).show()
+                                true
+                            } else {
+                                Toast.makeText(localContext, "Quest with same description already exists", Toast.LENGTH_SHORT).show()
+                                false
+                            }
+                        }
                     },
                     confirmDraftChanged = {
                         viewModel.draftQuest = it
