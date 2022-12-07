@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
 
                 // A surface container using the 'background' color from the theme
 //                WindowCompat.setDecorFitsSystemWindows(window, true)
+                window
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = BASIC_QUEST_SCREEN_DESTINATION) {
                     basicQuestGraph(navController, viewModel)

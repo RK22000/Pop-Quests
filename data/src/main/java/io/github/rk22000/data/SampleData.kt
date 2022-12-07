@@ -1,7 +1,5 @@
 package io.github.rk22000.data
 
-import androidx.compose.runtime.currentCompositionLocalContext
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 
 object SampleData {
@@ -28,12 +26,12 @@ enum class SampleTags {
     FUN,
 }
 
-class DeckPreviewProvider : PreviewParameterProvider<QuestDeck> {
-    override val values: Sequence<QuestDeck>
-        get() = sequenceOf(SampleData.getSampleQuests())
-}
-
-class QuestPreviewProvider: PreviewParameterProvider<Quest> {
-    override val values: Sequence<Quest>
-        get() = SampleData.getSampleQuests().quests.asSequence()
-}
+//class DeckPreviewProvider : PreviewParameterProvider<QuestDeck> {
+//    override val values: Sequence<QuestDeck>
+//        get() = sequenceOf(SampleData.getSampleQuests())
+//}
+//
+//class QuestPreviewProvider: PreviewParameterProvider<Quest> {
+//    override val values: Sequence<Quest>
+//        get() = SampleData.getSampleQuests().quests.asSequence()
+//}

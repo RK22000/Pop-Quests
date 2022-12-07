@@ -1,5 +1,5 @@
 object Compose{
-    const val version = "1.1.1"
+    const val version = "1.2.0"
     const val nav_version = "2.5.1"
 }
 

@@ -2,12 +2,7 @@ package io.github.rk22000.basic_quests
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
@@ -82,7 +77,8 @@ fun BasicQuestScreen(
             mutableStateOf(
                 with(fullQuestDeck) {
                     copy(
-                        quests = quests.filter(currentQuestFilter).sortedWith(currentMood.comparator)
+                        quests = if(currentMood==Mood.RANDOM) quests.filter(currentQuestFilter).shuffled()
+                                else quests.filter(currentQuestFilter).sortedWith(currentMood.comparator)
                     )
                 }
             )

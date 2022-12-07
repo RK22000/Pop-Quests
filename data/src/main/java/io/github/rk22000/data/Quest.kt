@@ -70,6 +70,11 @@ enum class Mood(
                 ?: (q2.priority - q1.priority)
         }
     ),
+    RANDOM(
+        "Random",
+        { true },
+        LAZY.comparator
+    )
 }
 
 data class QuestDeck(
